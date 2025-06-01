@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.db.session import Base, engine
 from app.api.controllers import products
+from app.api.controllers import sensors
 
 app = FastAPI()
 
@@ -8,6 +9,7 @@ app = FastAPI()
 Base.metadata.create_all(bind=engine)
 
 app.include_router(products.router)
+app.include_router(sensors.router, prefix="/api/v1", tags=["SensorData"])
 
 
 @app.get("/")

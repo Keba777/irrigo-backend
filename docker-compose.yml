@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:14
+    container_name: irrigo_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-irrigo_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - irrigo_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: irrigo_api
+    restart: always
+    env_file:
+      - .env
+    environment: {}   
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+
+volumes:
+  irrigo_data:

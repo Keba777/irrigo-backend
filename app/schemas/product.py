@@ -3,16 +3,20 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
+
 class ProductBase(BaseModel):
     name: str
     url: str
 
+
 class ProductCreate(ProductBase):
-    pass  
+    pass
+
 
 class ProductUpdate(ProductBase):
     name: Optional[str] = None
     url: Optional[str] = None
+
 
 class Product(ProductBase):
     id: int
@@ -20,4 +24,4 @@ class Product(ProductBase):
     price_history: List[float]
 
     class Config:
-        orm_mode = True  
+        from_attributes = True

@@ -1,36 +1,41 @@
 from pydantic import BaseModel
-from typing import Optional
 from datetime import datetime
-from app.models.sensor import SensorType
+from typing import Literal
 
 
-# Base schema shared by Create/Update/Read
+# ========== SENSOR DATA SCHEMAS ==========
+
+
 class SensorDataBase(BaseModel):
-    sensor_type: SensorType
-    temperature: Optional[float] = None
-    humidity: Optional[float] = None
-    moisture_percentage: Optional[float] = None
-    water_level: Optional[float] = None
+    temperature: float
+    humidity: float
+    soil_moisture: float
+    pump_status: Literal["ON", "OFF"]
 
 
-# Schema for creating new sensor data
 class SensorDataCreate(SensorDataBase):
     pass
 
 
-# Schema for updating existing sensor data
-class SensorDataUpdate(BaseModel):
-    temperature: Optional[float] = None
-    humidity: Optional[float] = None
-    moisture_percentage: Optional[float] = None
-    water_level: Optional[float] = None
-
-
-# Schema for response/output with ORM support
-class SensorData(SensorDataBase):
+class SensorDataResponse(SensorDataBase):
     id: int
     created_at: datetime
     updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# ========== PUMP CONTROL SCHEMAS ==========
+
+
+class PumpControlRequest(BaseModel):
+    command: Literal["ON", "OFF"]
+
+
+class PumpStatusResponse(BaseModel):
+    status: Literal["ON", "OFF"]
+    last_updated: datetime
 
     class Config:
         from_attributes = True
